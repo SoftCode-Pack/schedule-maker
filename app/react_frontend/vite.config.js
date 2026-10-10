@@ -1,0 +1,20 @@
+// frontend/vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig(({ command }) => ({
+  plugins: [react()],
+  // Built assets are served by Yii from web/dist; the dev server serves them from its root.
+  base: command === 'build' ? '/dist/' : '/',
+  build: {
+    outDir: '../web/dist',
+    emptyOutDir: true,
+    manifest: true,
+    rollupOptions: { input: 'src/main.jsx' },
+  },
+  server: {
+    port: 5173,
+    strictPort: true,
+    origin: 'http://localhost:5173',
+  },
+}))
