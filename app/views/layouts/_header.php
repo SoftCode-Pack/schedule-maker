@@ -22,6 +22,11 @@ $items = [
         'url' => ['/site/contact'],
     ],
     [
+        'label' => Yii::t('app', 'Sign up'),
+        'url' => ['/site/register'],
+        'visible' => Yii::$app->user->isGuest,
+    ],
+    [
         'label' => 'Login',
         'url' => ['/site/login'],
         'visible' => Yii::$app->user->isGuest,

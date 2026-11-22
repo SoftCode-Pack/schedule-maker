@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\RegisterForm;
 use Yii;
 use app\models\ContactForm;
 use app\models\LoginForm;
@@ -81,6 +82,25 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionRegister() : Response|string
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $registerForm = new RegisterForm();
+        if ($registerForm->load(Yii::$app->request->post()) && $registerForm->validate()) {
+            if ($registerForm->register()) {
+                Yii::$app->session->setFlash('success',Yii::t('app','You successfully registered.'));
+                return $this->goHome();
+            } else {
+                Yii::$app->session->setFlash('error',Yii::t('app','Internal server error.'));
+            }
+        }
+
+        return $this->render('register', ['registerForm' => $registerForm]);
+    }
+
     /**
      * Login action.
      *
@@ -99,7 +119,7 @@ class SiteController extends Controller
         }
 
         $model->password = '';
-        $model->username = '';
+        $model->email = '';
 
         return $this->render('login', ['model' => $model]);
     }
